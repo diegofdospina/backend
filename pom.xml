@@ -2,34 +2,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>4.0.4</version>
-    <relativePath/> <!-- lookup parent from repository -->
+    <relativePath/>
   </parent>
+
   <groupId>co.diegoospina</groupId>
   <artifactId>backend</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>backend</name>
   <description>backend</description>
-  <url/>
-  <licenses>
-    <license/>
-  </licenses>
-  <developers>
-    <developer/>
-  </developers>
-  <scm>
-    <connection/>
-    <developerConnection/>
-    <tag/>
-    <url/>
-  </scm>
+
   <properties>
     <java.version>25</java.version>
+    <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+    <hypersistence-utils.version>3.15.2</hypersistence-utils.version>
   </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -48,21 +42,39 @@
       <artifactId>spring-boot-starter-webmvc</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-liquibase</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
       <version>3.0.2</version>
     </dependency>
-
     <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <scope>runtime</scope>
+      <groupId>io.hypersistence</groupId>
+      <artifactId>hypersistence-utils-hibernate-73</artifactId>
+      <version>${hypersistence-utils.version}</version>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <optional>true</optional>
     </dependency>
+
+    <!-- RUNTIME -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-docker-compose</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- END RUNTIME -->
+
+    <!-- TEST -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa-test</artifactId>
@@ -98,10 +110,13 @@
       <artifactId>testcontainers-postgresql</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- END TEST -->
+
   </dependencies>
 
   <build>
     <plugins>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -114,6 +129,7 @@
           </annotationProcessorPaths>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -126,6 +142,61 @@
           </excludes>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.liquibase</groupId>
+        <artifactId>liquibase-maven-plugin</artifactId>
+        <version>${liquibase.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>${jakarta-persistence.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+            <version>${jakarta-validation.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <version>${jboss-logging.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.liquibase.ext</groupId>
+            <artifactId>liquibase-hibernate6</artifactId>
+            <version>${liquibase.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${project.parent.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.hypersistence</groupId>
+            <artifactId>hypersistence-utils-hibernate-63</artifactId>
+            <version>${hypersistence-utils.version}</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <changeLogFile>src/main/resources/db/changelog/db.changelog-master.yaml</changeLogFile>
+          <diffChangeLogFile>
+            src/main/resources/db/changelog/${version}/${maven.build.timestamp}_changelog.yaml
+          </diffChangeLogFile>
+          <driver>org.postgresql.Driver</driver>
+          <url>jdbc:postgresql://localhost:50001/backend_db</url>
+          <username>backend_db_user</username>
+          <password>backend_db_password</password>
+          <referenceDriver>liquibase.ext.hibernate.database.connection.HibernateDriver</referenceDriver>
+          <referenceUrl>
+            hibernate:spring:co.diegoospina.backend?dialect=org.hibernate.dialect.PostgreSQLDialect
+            &amp;hibernate.physical_naming_strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+            &amp;hibernate.implicit_naming_strategy=org.springframework.boot.hibernate.SpringImplicitNamingStrategy
+          </referenceUrl>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 

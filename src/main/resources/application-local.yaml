@@ -1,0 +1,11 @@
+spring:
+
+  docker:
+    compose:
+      enabled: true
+      file: docker/docker-compose.yml
+
+  datasource:
+    url: http://localhost:50001/backend_db_user
+    username: backend_db_user
+    password: backend_db_password

@@ -1,11 +1,13 @@
 package co.diegoospina.backend;
 
+import co.diegoospina.backend.shared.infrastructure.config.TestcontainersConfiguration;
 import org.springframework.boot.SpringApplication;
 
 public class TestBackendApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.from(BackendApplication::main).with(TestcontainersConfiguration.class)
+    static void main(String[] args) {
+        SpringApplication.from(BackendApplication::main)
+            .with(TestcontainersConfiguration.class)
             .run(args);
     }
 

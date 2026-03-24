@@ -1,0 +1,15 @@
+spring:
+
+  application:
+    name: backend
+
+  profiles:
+    active: local
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+  datasource:
+    url: ${BACKEND_DB_URL}
+    username: ${BACKEND_DB_USER}
+    password: ${BACKEND_DB_PASSWORD}
