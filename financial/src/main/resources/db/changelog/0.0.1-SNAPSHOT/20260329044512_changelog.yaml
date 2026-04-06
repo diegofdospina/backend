@@ -1,0 +1,270 @@
+databaseChangeLog:
+- changeSet:
+    id: 1774759515111-1
+    author: diego (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: accountsPK
+            name: id
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP(6) WITH TIME ZONE
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITH TIME ZONE
+        - column:
+            name: version
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: amount
+            type: numeric(10, 2)
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: VARCHAR(255)
+        tableName: accounts
+- changeSet:
+    id: 1774759515111-2
+    author: diego (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: concept_configurationsPK
+            name: id
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP(6) WITH TIME ZONE
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITH TIME ZONE
+        - column:
+            name: version
+            type: INTEGER
+        - column:
+            name: end_date
+            type: TIMESTAMP(6) WITH TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: start_date
+            type: TIMESTAMP(6) WITH TIME ZONE
+        - column:
+            constraints:
+              nullable: false
+            name: value
+            type: numeric(10, 2)
+        - column:
+            name: concept_id
+            type: VARCHAR(255)
+        tableName: concept_configurations
+- changeSet:
+    id: 1774759515111-3
+    author: diego (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: conceptsPK
+            name: id
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP(6) WITH TIME ZONE
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITH TIME ZONE
+        - column:
+            name: version
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: description
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: status
+            type: SMALLINT
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: VARCHAR(255)
+        tableName: concepts
+- changeSet:
+    id: 1774759515111-4
+    author: diego (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: transactionsPK
+            name: id
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP(6) WITH TIME ZONE
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITH TIME ZONE
+        - column:
+            name: version
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: value
+            type: numeric(10, 2)
+        - column:
+            name: destination_account_id
+            type: VARCHAR(255)
+        - column:
+            name: origin_account_id
+            type: VARCHAR(255)
+        tableName: transactions
+- changeSet:
+    id: 1774759515111-5
+    author: diego (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: created_at
+            type: TIMESTAMP(6) WITH TIME ZONE
+        - column:
+            name: updated_at
+            type: TIMESTAMP(6) WITH TIME ZONE
+        - column:
+            name: version
+            type: INTEGER
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: username
+            type: VARCHAR(255)
+        tableName: users
+- changeSet:
+    id: 1774759515111-6
+    author: diego (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: user_id
+        constraintName: UC_ACCOUNTSUSER_ID_COL
+        tableName: accounts
+- changeSet:
+    id: 1774759515111-7
+    author: diego (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: user_id
+        constraintName: UC_CONCEPTSUSER_ID_COL
+        tableName: concepts
+- changeSet:
+    id: 1774759515111-8
+    author: diego (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: accounts
+        constraintName: fk_account_user_id
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1774759515111-9
+    author: diego (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: concept_id
+        baseTableName: concept_configurations
+        constraintName: fk_concept_configuration_concept
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: concepts
+        validate: true
+- changeSet:
+    id: 1774759515111-10
+    author: diego (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: concepts
+        constraintName: fk_concept_user_id
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 1774759515111-11
+    author: diego (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: destination_account_id
+        baseTableName: transactions
+        constraintName: fk_transaction_destination_account
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: accounts
+        validate: true
+- changeSet:
+    id: 1774759515111-12
+    author: diego (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: origin_account_id
+        baseTableName: transactions
+        constraintName: fk_transaction_origin_account
+        deferrable: false
+        initiallyDeferred: false
+        referencedColumnNames: id
+        referencedTableName: accounts
+        validate: true
+
